@@ -2,46 +2,40 @@ import { useCallback, useEffect, useState, useMemo} from "react"
 
 export const useCounterCalculator = () => {
     const [answer, setAnswer] = useState<number>(0);
-    const [first_input, setFirstInput] = useState<number>(0);
-    const [second_input, setSecondInput] = useState<number>(0);
+    const [input, setInput] = useState<string>('');
 
-    const plus = useCallback(
+    const seeResult = useCallback(
         () => {
-            setAnswer(first_input + second_input)
+            setAnswer(eval(input));
         },
-        [first_input, second_input],
+        [input],
     )
 
-    const minus = useCallback(
-        () => {
-            setAnswer(first_input - second_input)
+    const handleClick = useCallback(
+        (e) => {
+            setInput((prev : string ) => prev + e.target.value);
+            console.log(input)
         },
-        [first_input, second_input],
+        [input],
     )
 
     const resetCalculator = useCallback(
         () => {
-            setAnswer(0)
+            setAnswer(0);
+            setInput(" ");
         },
         [],
     )
 
-    const multiple = useCallback(
-        () => {
-            setAnswer(first_input * second_input)
-        },
-        [first_input, second_input],
-    )
-
-    const divide = useCallback(
-        () => {
-            setAnswer(first_input / second_input)
-        },
-        [first_input, second_input],
-    )
+    useEffect(() => {
+        if (input !== '0' && answer !== 0){
+            console.log(input)
+            console.log(answer)
+        }
+    }, [input, answer])
 
     const answerComponent = useMemo (() => {
-       return <div>answer : {answer}</div>
+       return <div>Answer : {answer}</div>
     }, [answer])
 
     useEffect(() => {
@@ -50,5 +44,5 @@ export const useCounterCalculator = () => {
         }
     }, [answer])
     
-    return { plus , minus , multiple , divide , resetCalculator , answerComponent , setFirstInput , setSecondInput }
+    return { resetCalculator , answerComponent  , seeResult , handleClick , input }
 }
